@@ -25,27 +25,24 @@ class CustomTextFormField extends StatelessWidget {
       width: 1.0,
     ));
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextFormField(
-        cursorColor: PRIMARY_COLOR,
-        onChanged: onChanged,
-        obscureText: obscureText,
-        autofocus: false,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.all(20),
-          hintText: hintText,
-          hintStyle: TextStyle(
-            color: BODY_TEXT_COLOR,
-            fontSize: 14.0,
-          ),
-          fillColor: INPUT_BG_COLOR,
-          filled: true,
-          border: baseBorder,
-          focusedBorder: baseBorder.copyWith(
-              borderSide: baseBorder.borderSide.copyWith(color: PRIMARY_COLOR)),
-          // errorText: errorText
+    return TextFormField(
+      cursorColor: PRIMARY_COLOR,
+      onChanged: onChanged,
+      obscureText: obscureText,
+      autofocus: false,
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.all(20),
+        hintText: hintText,
+        hintStyle: TextStyle(
+          color: BODY_TEXT_COLOR,
+          fontSize: 14.0,
         ),
+        fillColor: INPUT_BG_COLOR,
+        filled: true,
+        border: baseBorder,
+        focusedBorder: baseBorder.copyWith(
+            borderSide: baseBorder.borderSide.copyWith(color: PRIMARY_COLOR)),
+        // errorText: errorText
       ),
     );
   }
