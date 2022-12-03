@@ -13,6 +13,7 @@ class _App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(fontFamily: 'NotoSans'),
       home: Scaffold(
         backgroundColor: Colors.white,
         body: Column(
@@ -21,14 +22,12 @@ class _App extends StatelessWidget {
             CustomTextFormField(
               hintText: '이메일을 입력해주세요.',
               errorText: 'Error!',
-              autofocus: false,
               onChanged: (String value) {},
             ),
             CustomTextFormField(
               hintText: '비밀번호를 입력해주세요.',
               errorText: 'Error!',
-              obscureText: false,
-              autofocus: false,
+              obscureText: true,
               onChanged: (String value) {},
             )
           ],
