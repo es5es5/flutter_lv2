@@ -56,11 +56,11 @@ flutter:
   uses-material-design: true
 
   assets:
-    - asset/img/misc
-    - asset/img/food
-    - asset/svg/icon
-    - asset/img/logo
-    - asset/rive
+    - asset/img/misc/
+    - asset/img/food/
+    - asset/svg/icon/
+    - asset/img/logo/
+    - asset/rive/
 
   fonts:
     - family: NotoSans
