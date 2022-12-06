@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_lv2/user/view/login_screen.dart';
+import 'package:flutter_lv2/user/view/splash_screen.dart';
 
 void main() {
   runApp(
@@ -14,7 +15,7 @@ class _App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(fontFamily: 'NotoSans'),
-      home: LoginScreen(),
+      home: SplashScreen(),
     );
   }
 }
