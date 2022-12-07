@@ -25,7 +25,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final dio = Dio();
-    final storage = FlutterSecureStorage();
 
     final emulatorIp = '10.0.2.2';
     final simulatorIp = '127.0.0.1';
