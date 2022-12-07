@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_lv2/common/component/custom_text_form_field.dart';
+import 'package:flutter_lv2/common/components/custom_text_form_field.dart';
 import 'package:flutter_lv2/common/const/colors.dart';
 import 'package:flutter_lv2/common/const/data.dart';
 import 'package:flutter_lv2/common/layout/default_layout.dart';
