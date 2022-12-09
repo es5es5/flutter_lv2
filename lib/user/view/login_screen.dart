@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,6 @@ import 'package:flutter_lv2/common/const/colors.dart';
 import 'package:flutter_lv2/common/const/data.dart';
 import 'package:flutter_lv2/common/layout/default_layout.dart';
 import 'package:flutter_lv2/common/view/root_tab.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -25,12 +23,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final dio = Dio();
-
-    final emulatorIp = '10.0.2.2';
-    final simulatorIp = '127.0.0.1';
-    final port = '3040';
-
-    final ip = Platform.isIOS ? simulatorIp : emulatorIp;
 
     return DefaultLayout(
         child: SingleChildScrollView(
@@ -111,8 +103,8 @@ class _Title extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      '환영합니다!A',
+    return const Text(
+      '환영합니다!',
       style: TextStyle(
         fontSize: 34,
         fontWeight: FontWeight.w500,
@@ -127,7 +119,7 @@ class _SubTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text('이메일과 비밀번호를 입력해주세요!\n오늘도 성공적인 주문이 되길 :3',
+    return const Text('이메일과 비밀번호를 입력해주세요!\n오늘도 성공적인 주문이 되길 :3',
         style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,
