@@ -6,12 +6,14 @@ class CustomTextFormField extends StatelessWidget {
   final String errorText;
   final bool obscureText;
   final bool autofocus;
+  final String initialValue;
   final ValueChanged<String>? onChanged;
 
   const CustomTextFormField(
       {required this.hintText,
       this.errorText = 'Error !',
       this.obscureText = false,
+      this.initialValue = '',
       this.autofocus = false,
       required this.onChanged,
       Key? key})
@@ -26,6 +28,7 @@ class CustomTextFormField extends StatelessWidget {
     ));
 
     return TextFormField(
+      initialValue: initialValue,
       cursorColor: PRIMARY_COLOR,
       onChanged: onChanged,
       obscureText: obscureText,
