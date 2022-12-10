@@ -42,6 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: MediaQuery.of(context).size.width,
               ),
               CustomTextFormField(
+                initialValue: 'test@codefactory.ai',
                 hintText: '이메일을 입력해주세요.',
                 errorText: 'Error!',
                 onChanged: (String value) {
