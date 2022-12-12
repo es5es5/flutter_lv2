@@ -14,11 +14,9 @@ class RestaurantScreen extends StatelessWidget {
     final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
 
     final response = await dio.get(
-      'http://$API_URL/restaurant',
+      '$API_URL/restaurant',
       options: Options(
-        headers: {
-          'authorization': 'Bearer $accessToken'
-        },
+        headers: {'authorization': 'Bearer $accessToken'},
       ),
     );
 
@@ -31,17 +29,24 @@ class RestaurantScreen extends StatelessWidget {
       child: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: RestraurantCard(
-              image: Image.asset(
-                'asset/img/food/ddeok_bok_gi.jpg',
-                fit: BoxFit.cover,
-              ),
-              name: '불타는 떡볶이',
-              tags: ['떡볶이', '치즈', '매운맛'],
-              ratingsCount: 100,
-              deliveryTime: 15,
-              deliveryFee: 2000,
-              ratings: 4.52),
+          child: FutureBuilder<List>(
+            future: pageRestaurant(),
+            builder: (context, AsyncSnapshot<List> snapshot) {
+              print(snapshot.error);
+              print(snapshot.data);
+              return RestraurantCard(
+                  image: Image.asset(
+                    'asset/img/food/ddeok_bok_gi.jpg',
+                    fit: BoxFit.cover,
+                  ),
+                  name: '불타는 떡볶이',
+                  tags: ['떡볶이', '치즈', '매운맛'],
+                  ratingsCount: 100,
+                  deliveryTime: 15,
+                  deliveryFee: 2000,
+                  ratings: 4.52);
+            },
+          ),
         ),
       ),
     );

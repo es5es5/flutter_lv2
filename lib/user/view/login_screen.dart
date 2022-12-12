@@ -17,8 +17,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String username = '';
-  String password = '';
+  String username = 'test@codefactory.ai';
+  String password = 'testtest';
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 16.0),
               CustomTextFormField(
+                initialValue: 'testtest',
                 hintText: '비밀번호를 입력해주세요.',
                 errorText: 'Error!',
                 obscureText: true,
@@ -60,14 +61,13 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               ElevatedButton(
                   onPressed: () async {
-                    final rawString = '$username:$password';
+                    final rawString = 'Login.. $username:$password';
 
                     print(rawString);
                     Codec<String, String> stringToBase64 = utf8.fuse(base64);
 
                     String token = stringToBase64.encode(rawString);
-                    final response = await dio.post(
-                        '$API_URL/auth/login',
+                    final response = await dio.post('$API_URL/auth/login',
                         options: Options(
                             headers: {'authorization': 'Basic $token'}));
 

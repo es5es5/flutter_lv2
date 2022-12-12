@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void checkToken() async {
     final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
-    final accesshToken = await storage.read(key: ACCESS_TOKEN_KEY);
+    final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
 
     final dio = Dio();
 
@@ -39,6 +39,13 @@ class _SplashScreenState extends State<SplashScreen> {
           'authorization': 'Bearer $refreshToken',
         }),
       );
+
+      await storage.write(
+          key: ACCESS_TOKEN_KEY, value: response.data['accessToken']);
+
+      await storage.write(
+          key: REFRESH_TOKEN_KEY, value: response.data['refreshToken']);
+
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => RootTab()),
         (route) => false,
