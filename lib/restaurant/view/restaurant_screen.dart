@@ -32,19 +32,31 @@ class RestaurantScreen extends StatelessWidget {
           child: FutureBuilder<List>(
             future: pageRestaurant(),
             builder: (context, AsyncSnapshot<List> snapshot) {
-              print(snapshot.error);
-              print(snapshot.data);
-              return RestraurantCard(
-                  image: Image.asset(
-                    'asset/img/food/ddeok_bok_gi.jpg',
-                    fit: BoxFit.cover,
-                  ),
-                  name: '불타는 떡볶이',
-                  tags: ['떡볶이', '치즈', '매운맛'],
-                  ratingsCount: 100,
-                  deliveryTime: 15,
-                  deliveryFee: 2000,
-                  ratings: 4.52);
+              if (!snapshot.hasData) {
+                return Container();
+              }
+
+              return ListView.separated(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (_, index) {
+                  final item = snapshot.data![index];
+
+                  return RestraurantCard(
+                      image: Image.network(
+                        '$API_URL${item['thumbUrl']}',
+                        fit: BoxFit.cover,
+                      ),
+                      name: item['name'],
+                      tags: List<String>.from(item['tags']),
+                      ratingsCount: item['ratingsCount'],
+                      deliveryTime: item['deliveryTime'],
+                      deliveryFee: item['deliveryFee'],
+                      ratings: item['ratings']);
+                },
+                separatorBuilder: (_, index) {
+                  return const SizedBox(height: 16);
+                },
+              );
             },
           ),
         ),
