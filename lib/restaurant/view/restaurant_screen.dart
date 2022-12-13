@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_lv2/common/const/data.dart';
 import 'package:flutter_lv2/restaurant/components/restaurant_card.dart';
+import 'package:flutter_lv2/restaurant/model/restaurant_model.dart';
 
 class RestaurantScreen extends StatelessWidget {
   const RestaurantScreen({super.key});
@@ -40,18 +41,30 @@ class RestaurantScreen extends StatelessWidget {
                 itemCount: snapshot.data!.length,
                 itemBuilder: (_, index) {
                   final item = snapshot.data![index];
+                  final parsedItem = RestaurantModel(
+                    id: item['id'],
+                    name: item['name'],
+                    thumbUrl: '$API_URL${item['thumbUrl']}',
+                    tags: List<String>.from(item['tags']),
+                    priceRange: RestaurantPriceRange.values.firstWhere(
+                        (element) => element.name == item['priceRange']),
+                    ratings: item['ratings'],
+                    ratingsCount: item['ratingsCount'],
+                    deliveryTime: item['deliveryTime'],
+                    deliveryFee: item['deliveryFee'],
+                  );
 
                   return RestraurantCard(
                       image: Image.network(
-                        '$API_URL${item['thumbUrl']}',
+                        parsedItem.thumbUrl,
                         fit: BoxFit.cover,
                       ),
-                      name: item['name'],
-                      tags: List<String>.from(item['tags']),
-                      ratingsCount: item['ratingsCount'],
-                      deliveryTime: item['deliveryTime'],
-                      deliveryFee: item['deliveryFee'],
-                      ratings: item['ratings']);
+                      name: parsedItem.name,
+                      tags: parsedItem.tags,
+                      ratingsCount: parsedItem.ratingsCount,
+                      deliveryTime: parsedItem.deliveryTime,
+                      deliveryFee: parsedItem.deliveryFee,
+                      ratings: parsedItem.ratings);
                 },
                 separatorBuilder: (_, index) {
                   return const SizedBox(height: 16);
