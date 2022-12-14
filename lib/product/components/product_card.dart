@@ -33,6 +33,7 @@ class ProductCard extends StatelessWidget {
               ),
               Text(
                 '떡볶이 맛있다.\n응 맛있어!',
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: BODY_TEXT_COLOR,
                   fontSize: 14,
@@ -40,6 +41,7 @@ class ProductCard extends StatelessWidget {
               ),
               Text(
                 '₩10,000',
+                textAlign: TextAlign.right,
                 style: TextStyle(
                   color: PRIMARY_COLOR,
                   fontSize: 14,
