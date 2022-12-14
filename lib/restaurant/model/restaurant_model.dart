@@ -1,3 +1,6 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_lv2/common/const/data.dart';
+
 enum RestaurantPriceRange {
   expensive,
   medium,
@@ -26,4 +29,21 @@ class RestaurantModel {
     required this.deliveryTime,
     required this.deliveryFee,
   });
+
+  factory RestaurantModel.fromJson({
+    required Map<String, dynamic> json,
+  }) {
+    return RestaurantModel(
+      id: json['id'],
+      name: json['name'],
+      thumbUrl: '$API_URL${json['thumbUrl']}',
+      tags: List<String>.from(json['tags']),
+      priceRange: RestaurantPriceRange.values
+          .firstWhere((element) => element.name == json['priceRange']),
+      ratings: json['ratings'],
+      ratingsCount: json['ratingsCount'],
+      deliveryTime: json['deliveryTime'],
+      deliveryFee: json['deliveryFee'],
+    );
+  }
 }
