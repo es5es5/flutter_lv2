@@ -1,21 +1,50 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_lv2/common/const/data.dart';
 import 'package:flutter_lv2/common/layout/default_layout.dart';
 import 'package:flutter_lv2/product/components/product_card.dart';
 import 'package:flutter_lv2/restaurant/components/restaurant_card.dart';
 
 class RestaurantDetailScreen extends StatelessWidget {
-  const RestaurantDetailScreen({super.key});
+  final String id;
+
+  const RestaurantDetailScreen({
+    required this.id,
+    super.key,
+  });
+
+  Future getRestaurantDetail() async {
+    final dio = Dio();
+
+    final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
+
+    final response = await dio.get(
+      '$API_URL/restaurant/$id',
+      options: Options(
+        headers: {'authorization': 'Bearer $accessToken'},
+      ),
+    );
+
+    print(response);
+
+    return response;
+  }
 
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
       title: 'Card Detail',
-      child: CustomScrollView(
-        slivers: [
-          renderTop(),
-          renderLabel(),
-          renderProduct(),
-        ],
+      child: FutureBuilder(
+        future: getRestaurantDetail(),
+        builder: (_, snapshot) {
+          return CustomScrollView(
+            slivers: [
+              renderTop(),
+              renderLabel(),
+              renderProduct(),
+            ],
+          );
+        },
       ),
     );
   }
