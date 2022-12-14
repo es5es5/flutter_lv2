@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_lv2/common/const/data.dart';
 
 enum RestaurantPriceRange {

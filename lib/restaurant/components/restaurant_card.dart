@@ -10,6 +10,8 @@ class RestraurantCard extends StatelessWidget {
   final int deliveryTime;
   final int deliveryFee;
   final double ratings;
+  final bool isDetail;
+  final String? detail;
 
   const RestraurantCard({
     required this.image,
@@ -19,11 +21,14 @@ class RestraurantCard extends StatelessWidget {
     required this.deliveryTime,
     required this.deliveryFee,
     required this.ratings,
+    this.isDetail = false,
+    this.detail,
     super.key,
   });
 
   factory RestraurantCard.fromModel({
     required RestaurantModel model,
+    bool isDetail = false,
   }) {
     return RestraurantCard(
       image: Image.network(
@@ -36,6 +41,7 @@ class RestraurantCard extends StatelessWidget {
       deliveryTime: model.deliveryTime,
       deliveryFee: model.deliveryFee,
       ratings: model.ratings,
+      isDetail: isDetail,
     );
   }
 
@@ -43,41 +49,48 @@ class RestraurantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: image,
-        ),
+        if (isDetail) image,
+        if (!isDetail)
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: image,
+          ),
         const SizedBox(height: 16),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              name,
-              style: const TextStyle(
-                fontSize: 20,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: isDetail ? 16 : 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                name,
+                style: const TextStyle(
+                  fontSize: 20,
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              tags.join('·'),
-              style: TextStyle(color: BODY_TEXT_COLOR, fontSize: 14),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                _IconText(icon: Icons.star, label: ratings.toString()),
-                renderDot(),
-                _IconText(icon: Icons.receipt, label: ratingsCount.toString()),
-                renderDot(),
-                _IconText(
-                    icon: Icons.timelapse_outlined, label: '$deliveryTime 분'),
-                renderDot(),
-                _IconText(
-                    icon: Icons.monetization_on,
-                    label: deliveryFee == 0 ? '무료' : deliveryFee.toString()),
-              ],
-            )
-          ],
+              const SizedBox(height: 8),
+              Text(
+                tags.join('·'),
+                style: TextStyle(color: BODY_TEXT_COLOR, fontSize: 14),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  _IconText(icon: Icons.star, label: ratings.toString()),
+                  renderDot(),
+                  _IconText(
+                      icon: Icons.receipt, label: ratingsCount.toString()),
+                  renderDot(),
+                  _IconText(
+                      icon: Icons.timelapse_outlined, label: '$deliveryTime 분'),
+                  renderDot(),
+                  _IconText(
+                      icon: Icons.monetization_on,
+                      label: deliveryFee == 0 ? '무료' : deliveryFee.toString()),
+                ],
+              ),
+              if (detail != null && isDetail) Text(detail!),
+            ],
+          ),
         )
       ],
     );
