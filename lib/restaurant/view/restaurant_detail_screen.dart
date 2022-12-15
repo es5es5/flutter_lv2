@@ -4,6 +4,7 @@ import 'package:flutter_lv2/common/const/data.dart';
 import 'package:flutter_lv2/common/layout/default_layout.dart';
 import 'package:flutter_lv2/product/components/product_card.dart';
 import 'package:flutter_lv2/restaurant/components/restaurant_card.dart';
+import 'package:flutter_lv2/restaurant/model/restaurant_detail_model.dart';
 
 class RestaurantDetailScreen extends StatelessWidget {
   final String id;
@@ -13,7 +14,7 @@ class RestaurantDetailScreen extends StatelessWidget {
     super.key,
   });
 
-  Future getRestaurantDetail() async {
+  Future<Map<String, dynamic>> getRestaurantDetail() async {
     final dio = Dio();
 
     final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
@@ -25,21 +26,25 @@ class RestaurantDetailScreen extends StatelessWidget {
       ),
     );
 
-    print(response);
-
-    return response;
+    return response.data;
   }
 
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
       title: 'Card Detail',
-      child: FutureBuilder(
+      child: FutureBuilder<Map<String, dynamic>>(
         future: getRestaurantDetail(),
-        builder: (_, snapshot) {
+        builder: (_, AsyncSnapshot<Map<String, dynamic>> snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          final item = RestaurantDetailModel.fromJson(json: snapshot.data!);
+
           return CustomScrollView(
             slivers: [
-              renderTop(),
+              renderTop(model: item),
               renderLabel(),
               renderProduct(),
             ],
@@ -49,27 +54,19 @@ class RestaurantDetailScreen extends StatelessWidget {
     );
   }
 
-  renderTop() {
+  SliverToBoxAdapter renderTop({
+    required RestaurantDetailModel model,
+  }) {
     return SliverToBoxAdapter(
-      child: RestraurantCard(
-        image: Image(
-          image: AssetImage('asset/img/food/ddeok_bok_gi.jpg'),
-          fit: BoxFit.cover,
-        ),
-        name: 'name',
-        tags: ['tags'],
-        ratingsCount: 100,
-        deliveryTime: 30,
-        deliveryFee: 3000,
-        ratings: 4.21,
+      child: RestraurantCard.fromModel(
+        model: model,
         isDetail: true,
-        detail: 'Hello',
       ),
     );
   }
 
   SliverPadding renderLabel() {
-    return SliverPadding(
+    return const SliverPadding(
       padding: EdgeInsets.symmetric(horizontal: 16),
       sliver: SliverToBoxAdapter(
         child: Text(
@@ -85,12 +82,12 @@ class RestaurantDetailScreen extends StatelessWidget {
 
   renderProduct() {
     return SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
           (context, index) {
-            return Padding(
-              padding: const EdgeInsets.only(top: 16),
+            return const Padding(
+              padding: EdgeInsets.only(top: 16),
               child: ProductCard(),
             );
           },

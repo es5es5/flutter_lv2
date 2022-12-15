@@ -21,18 +21,29 @@ class RestaurantDetailModel extends RestaurantModel {
 
   factory RestaurantDetailModel.fromJson({required Map<String, dynamic> json}) {
     return RestaurantDetailModel(
-        id: json['id'],
-        name: json['name'],
-        thumbUrl: '$API_URL${json['thumbUrl']}',
-        tags: List<String>.from(json['tags']),
-        priceRange: RestaurantPriceRange.values
-            .firstWhere((element) => element.name == json['priceRange']),
-        ratings: json['ratings'],
-        ratingsCount: json['ratingsCount'],
-        deliveryTime: json['deliveryTime'],
-        deliveryFee: json['deliveryFee'],
-        detail: json['detail'],
-        products: json['products']);
+      id: json['id'],
+      name: json['name'],
+      thumbUrl: '$API_URL${json['thumbUrl']}',
+      tags: List<String>.from(json['tags']),
+      priceRange: RestaurantPriceRange.values
+          .firstWhere((element) => element.name == json['priceRange']),
+      ratings: json['ratings'],
+      ratingsCount: json['ratingsCount'],
+      deliveryTime: json['deliveryTime'],
+      deliveryFee: json['deliveryFee'],
+      detail: json['detail'],
+      products: json['products']
+          .map<RestaurantProductModel>(
+            (item) => RestaurantProductModel(
+              id: item['id'],
+              name: item['name'],
+              imgUrl: item['imgUrl'],
+              detail: item['detail'],
+              price: item['price'],
+            ),
+          )
+          .toList(),
+    );
   }
 }
 
