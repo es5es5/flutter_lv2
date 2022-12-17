@@ -86,4 +86,10 @@ class CustomInterceptor extends Interceptor {
 
     super.onError(err, handler);
   }
+
+  @override
+  void onResponse(Response response, ResponseInterceptorHandler handler) {
+    print('[Http Response] [${response.requestOptions.method}] [${response.requestOptions.uri}]');
+    super.onResponse(response, handler);
+  }
 }
