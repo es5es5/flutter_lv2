@@ -6,6 +6,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_lv2/common/components/custom_text_form_field.dart';
 import 'package:flutter_lv2/common/const/colors.dart';
 import 'package:flutter_lv2/common/const/data.dart';
+import 'package:flutter_lv2/common/dio/dio.dart';
 import 'package:flutter_lv2/common/layout/default_layout.dart';
 import 'package:flutter_lv2/common/view/root_tab.dart';
 
@@ -23,6 +24,8 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final dio = Dio();
+
+    dio.interceptors.add(CustomInterceptor(storage: storage));
 
     return DefaultLayout(
         child: SingleChildScrollView(
