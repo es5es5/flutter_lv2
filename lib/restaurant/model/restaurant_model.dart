@@ -1,4 +1,3 @@
-import 'package:flutter_lv2/common/const/data.dart';
 import 'package:flutter_lv2/common/utils/data_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 

@@ -9,8 +9,8 @@ final emulatorIp = '10.0.2.2';
 final simulatorIp = '127.0.0.1';
 final port = '3040';
 
-// final ip = '192.168.0.2';
-final String ip = Platform.isIOS ? simulatorIp : emulatorIp;
+final ip = '192.168.0.2';
+// final String ip = Platform.isIOS ? simulatorIp : emulatorIp;
 
 final API_URL = 'http://$ip:$port';
 
