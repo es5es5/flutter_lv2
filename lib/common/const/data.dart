@@ -13,5 +13,3 @@ final ip = '192.168.0.2';
 // final String ip = Platform.isIOS ? simulatorIp : emulatorIp;
 
 final API_URL = 'http://$ip:$port';
-
-const storage = FlutterSecureStorage();
