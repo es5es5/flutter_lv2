@@ -2,10 +2,36 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'cursor_pagination_model.g.dart';
 
-@JsonSerializable(
-  genericArgumentFactories: true,
-)
-class CursorPagination<T> {
+abstract class CursorPaginationBase {}
+
+class CursorPaginationError extends CursorPaginationBase {
+  final String message;
+
+  CursorPaginationError({
+    required this.message,
+  });
+}
+
+// 새로고침할 때.
+class CursorPaginationRefetching extends CursorPagination {
+  CursorPaginationRefetching({
+    required super.meta,
+    required super.data,
+  });
+}
+
+// 리스트의 맨 아래로 내려서 추가 데이터를 요청하는 중.
+class CursorPaginationRefetchingMore extends CursorPagination {
+  CursorPaginationRefetchingMore({
+    required super.meta,
+    required super.data,
+  });
+}
+
+class CursorPaginationLoading extends CursorPaginationBase {}
+
+@JsonSerializable(genericArgumentFactories: true)
+class CursorPagination<T> extends CursorPaginationBase {
   final CursorPaginationMeta meta;
   final List<T> data;
 
@@ -14,7 +40,9 @@ class CursorPagination<T> {
     required this.data,
   });
 
-  factory CursorPagination.fromJson(Map<String, dynamic> json, T Function(Object? json) fromJsonT) => _$CursorPaginationFromJson(json, fromJsonT);
+  factory CursorPagination.fromJson(
+          Map<String, dynamic> json, T Function(Object? json) fromJsonT) =>
+      _$CursorPaginationFromJson(json, fromJsonT);
 }
 
 @JsonSerializable()
@@ -27,5 +55,6 @@ class CursorPaginationMeta {
     required this.hasMore,
   });
 
-  factory CursorPaginationMeta.fromJson(Map<String, dynamic> json) => _$CursorPaginationMetaFromJson(json);
+  factory CursorPaginationMeta.fromJson(Map<String, dynamic> json) =>
+      _$CursorPaginationMetaFromJson(json);
 }
