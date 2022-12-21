@@ -4,7 +4,7 @@ import 'package:flutter_lv2/common/secure_storage/secure_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-final dioProvider = Provider((ref) {
+final dioProvider = Provider<Dio>((ref) {
   final dio = Dio();
 
   final storage = ref.watch(secureStorageProvider);

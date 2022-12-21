@@ -6,28 +6,29 @@ import 'package:flutter_lv2/restaurant/components/restaurant_card.dart';
 import 'package:flutter_lv2/restaurant/model/restaurant_model.dart';
 import 'package:flutter_lv2/restaurant/repository/restaurant_repository.dart';
 import 'package:flutter_lv2/restaurant/view/restaurant_detail_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class RestaurantScreen extends StatelessWidget {
+class RestaurantScreen extends ConsumerWidget {
   const RestaurantScreen({super.key});
 
-  Future<List<RestaurantModel>> pageRestaurant() async {
-    final dio = Dio();
+  Future<List<RestaurantModel>> pageRestaurant(WidgetRef ref) async {
+    final dio = ref.watch(dioProvider);
 
-    dio.interceptors.add(CustomInterceptor(storage: storage));
-
-    final response = await RestaurantRepository(dio, baseUrl: '$API_URL/restaurant').paginate();
+    final response =
+        await RestaurantRepository(dio, baseUrl: '$API_URL/restaurant')
+            .paginate();
 
     return response.data;
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       child: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: FutureBuilder<List<RestaurantModel>>(
-            future: pageRestaurant(),
+            future: pageRestaurant(ref),
             builder: (context, AsyncSnapshot<List<RestaurantModel>> snapshot) {
               if (!snapshot.hasData) {
                 return const Center(child: CircularProgressIndicator());
