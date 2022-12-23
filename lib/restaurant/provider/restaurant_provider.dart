@@ -43,6 +43,13 @@ class RestaurantStateNotifier extends StateNotifier<CursorPaginationBase> {
       }
     }
     // 2. fetchMore = true (로딩 중)
-    //   로딩 중인데 fetchMore가 아닐 때 -> 새로고침의 의도가 있다.
+    //   로딩 중인데 fetchMore가 아닐 때 -> 새로고침의 의도가 있을 수 있다.
+    final isLoading = state is CursorPaginationLoading;
+    final isRefetching = state is CursorPaginationRefetching;
+    final isFetchingMore = state is CursorPaginationFetchingMore;
+
+    if (fetchMore && (isLoading || isRefetching || isFetchingMore)) {
+      return;
+    }
   }
 }

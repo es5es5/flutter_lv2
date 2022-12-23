@@ -21,8 +21,8 @@ class CursorPaginationRefetching<T> extends CursorPagination<T> {
 }
 
 // 리스트의 맨 아래로 내려서 추가 데이터를 요청하는 중.
-class CursorPaginationRefetchingMore<T> extends CursorPagination<T> {
-  CursorPaginationRefetchingMore({
+class CursorPaginationFetchingMore<T> extends CursorPagination<T> {
+  CursorPaginationFetchingMore({
     required super.meta,
     required super.data,
   });
