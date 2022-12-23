@@ -1,4 +1,5 @@
 import 'package:flutter_lv2/common/model/cursor_pagination_model.dart';
+import 'package:flutter_lv2/common/model/pagination_params.dart';
 import 'package:flutter_lv2/restaurant/repository/restaurant_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -42,6 +43,7 @@ class RestaurantStateNotifier extends StateNotifier<CursorPaginationBase> {
         return;
       }
     }
+
     // 2. fetchMore = true (로딩 중)
     //   로딩 중인데 fetchMore가 아닐 때 -> 새로고침의 의도가 있을 수 있다.
     final isLoading = state is CursorPaginationLoading;
@@ -50,6 +52,38 @@ class RestaurantStateNotifier extends StateNotifier<CursorPaginationBase> {
 
     if (fetchMore && (isLoading || isRefetching || isFetchingMore)) {
       return;
+    }
+
+    // PaginationParams 생성
+    PaginationParams paginationParams = PaginationParams(count: fetchCount);
+
+    // fetchMore
+    // 데이터를 추가로 더 가져오는 상황
+    if (fetchMore) {
+      final pState = state as CursorPagination;
+
+      state = CursorPaginationFetchingMore(
+        meta: pState.meta,
+        data: pState.data,
+      );
+
+      paginationParams = paginationParams.copyWith(after: pState.data.last.id);
+    }
+
+    final response = await repository.paginate(
+      paginationParams: paginationParams,
+    );
+
+    if (state is CursorPaginationFetchingMore) {
+      final pState = state as CursorPaginationFetchingMore;
+
+      // 기존 데이터에 새로운 데이터 추가
+      state = response.copyWith(
+        data: [
+          ...pState.data,
+          ...response.data,
+        ],
+      );
     }
   }
 }
