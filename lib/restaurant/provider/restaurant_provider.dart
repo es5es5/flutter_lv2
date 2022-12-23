@@ -29,61 +29,82 @@ class RestaurantStateNotifier extends StateNotifier<CursorPaginationBase> {
     // true: CursorPaginationLoading()
     bool forceRefetch = false,
   }) async {
-    // 1. CursorPagiation - 정상적으로 데이터가 있는 상태
-    // 2. CursorPagiationLoading - 데이터가 로딩 중인 상태 (현재 캐시 없음)
-    // 3. CursorPaginationError - 에러 상태
-    // 4. CursorPaginationRefetching - 첫번쨰 페이지부터 다시 데이터를 가져올 때
-    // 5. CursorPaginationFetchMore - 추가 데이터를 paginate 해오라는 요청을 받았을 때
+    try {
+      // 1. CursorPagiation - 정상적으로 데이터가 있는 상태
+      // 2. CursorPagiationLoading - 데이터가 로딩 중인 상태 (현재 캐시 없음)
+      // 3. CursorPaginationError - 에러 상태
+      // 4. CursorPaginationRefetching - 첫번쨰 페이지부터 다시 데이터를 가져올 때
+      // 5. CursorPaginationFetchMore - 추가 데이터를 paginate 해오라는 요청을 받았을 때
 
-    // 바로 반환되는 상황
-    // 1. hasMore = false (기존 상태에서 이미 다음 데이터가 없다는 값을 들고 있다면)
-    if (state is CursorPagination && !forceRefetch) {
-      final pState = state as CursorPagination;
-      if (!pState.meta.hasMore) {
+      // 바로 반환되는 상황
+      // 1. hasMore = false (기존 상태에서 이미 다음 데이터가 없다는 값을 들고 있다면)
+      if (state is CursorPagination && !forceRefetch) {
+        final pState = state as CursorPagination;
+        if (!pState.meta.hasMore) {
+          return;
+        }
+      }
+
+      // 2. fetchMore = true (로딩 중)
+      //   로딩 중인데 fetchMore가 아닐 때 -> 새로고침의 의도가 있을 수 있다.
+      final isLoading = state is CursorPaginationLoading;
+      final isRefetching = state is CursorPaginationRefetching;
+      final isFetchingMore = state is CursorPaginationFetchingMore;
+
+      if (fetchMore && (isLoading || isRefetching || isFetchingMore)) {
         return;
       }
-    }
 
-    // 2. fetchMore = true (로딩 중)
-    //   로딩 중인데 fetchMore가 아닐 때 -> 새로고침의 의도가 있을 수 있다.
-    final isLoading = state is CursorPaginationLoading;
-    final isRefetching = state is CursorPaginationRefetching;
-    final isFetchingMore = state is CursorPaginationFetchingMore;
+      // PaginationParams 생성
+      PaginationParams paginationParams = PaginationParams(count: fetchCount);
 
-    if (fetchMore && (isLoading || isRefetching || isFetchingMore)) {
-      return;
-    }
+      // fetchMore
+      // 데이터를 추가로 더 가져오는 상황
+      if (fetchMore) {
+        final pState = state as CursorPagination;
 
-    // PaginationParams 생성
-    PaginationParams paginationParams = PaginationParams(count: fetchCount);
+        state = CursorPaginationFetchingMore(
+          meta: pState.meta,
+          data: pState.data,
+        );
 
-    // fetchMore
-    // 데이터를 추가로 더 가져오는 상황
-    if (fetchMore) {
-      final pState = state as CursorPagination;
+        paginationParams =
+            paginationParams.copyWith(after: pState.data.last.id);
+      } else {
+        // 데이터를 처음부터 가져오는 상황
+        // 기존 데이터를 보존한 채로 Fetch (API 요청)을 진행
+        if (state is CursorPagination && !forceRefetch) {
+          final pState = state as CursorPagination;
 
-      state = CursorPaginationFetchingMore(
-        meta: pState.meta,
-        data: pState.data,
+          state = CursorPaginationRefetching(
+            meta: pState.meta,
+            data: pState.data,
+          );
+        } else {
+          // 데이터를 유지할 필요가 없는 상황
+          state = CursorPaginationLoading();
+        }
+      }
+
+      final response = await repository.paginate(
+        paginationParams: paginationParams,
       );
 
-      paginationParams = paginationParams.copyWith(after: pState.data.last.id);
-    }
+      if (state is CursorPaginationFetchingMore) {
+        final pState = state as CursorPaginationFetchingMore;
 
-    final response = await repository.paginate(
-      paginationParams: paginationParams,
-    );
-
-    if (state is CursorPaginationFetchingMore) {
-      final pState = state as CursorPaginationFetchingMore;
-
-      // 기존 데이터에 새로운 데이터 추가
-      state = response.copyWith(
-        data: [
-          ...pState.data,
-          ...response.data,
-        ],
-      );
+        // 기존 데이터에 새로운 데이터 추가
+        state = response.copyWith(
+          data: [
+            ...pState.data,
+            ...response.data,
+          ],
+        );
+      } else {
+        state = response;
+      }
+    } catch (e) {
+      state = CursorPaginationError(message: 'Pagination Error.');
     }
   }
 }
