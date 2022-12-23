@@ -13,7 +13,7 @@ class CursorPaginationError extends CursorPaginationBase {
 }
 
 // 새로고침할 때.
-class CursorPaginationRefetching extends CursorPagination {
+class CursorPaginationRefetching<T> extends CursorPagination<T> {
   CursorPaginationRefetching({
     required super.meta,
     required super.data,
@@ -21,7 +21,7 @@ class CursorPaginationRefetching extends CursorPagination {
 }
 
 // 리스트의 맨 아래로 내려서 추가 데이터를 요청하는 중.
-class CursorPaginationRefetchingMore extends CursorPagination {
+class CursorPaginationRefetchingMore<T> extends CursorPagination<T> {
   CursorPaginationRefetchingMore({
     required super.meta,
     required super.data,
